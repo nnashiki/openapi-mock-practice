@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: User API
+  version: 1.0.0
+paths:
+  /api/users:
+    get:
+      summary: Get list of users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+              examples:
+                emptyUsersResponse:
+                  summary: No users
+                  value:
+                    users: []
+                oneUserResponse:
+                  summary: One user
+                  value:
+                    users:
+                      - id: 1
+                        name: John Doe
+                        mailAddress: john.doe@example.com
+                ManyUserResponse:
+                  summary: Multiple users
+                  value:
+                    users:
+                      - id: 1
+                        name: John Doe
+                        mailAddress: john.doe@example.com
+                      - id: 2
+                        name: Jane Doe
+                        mailAddress: jane.doe@example.com
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: Internal server error
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: John Doe
+        mailAddress:
+          type: string
+          example: john.doe@example.com

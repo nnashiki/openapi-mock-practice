@@ -1,0 +1,21 @@
+http://localhost:80 {
+    # API の定義を記載 start
+
+    @api_users_get {
+        path /api/users
+        method GET
+    }
+    # API の定義を記載 end
+
+    # レスポンス切り替える対象を記載 start
+    handle @api_users_get {
+        reverse_proxy http://api-mock:4010 {
+            header_up Prefer "example=ManyUserResponse"
+        }
+    }
+    # レスポンス切り替える対象を記載 end
+
+    handle {
+        reverse_proxy http://api-mock:4010
+    }
+}

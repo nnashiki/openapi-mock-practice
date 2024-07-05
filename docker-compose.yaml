@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  api-mock-proxy:
+    image: caddy:2
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      api-mock:
+        condition: service_started
+
+  api-mock:
+    image: stoplight/prism:4
+    ports:
+      - "4010:4010"
+    volumes:
+      - ./openapi.yaml:/openapi.yaml
+    command:
+      mock /openapi.yaml -h 0.0.0.0 -p 4010
+
+  swagger:
+    image: swaggerapi/swagger-editor
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./openapi.yaml:/openapi.yaml
+    environment:
+     - SWAGGER_FILE=/openapi.yaml
